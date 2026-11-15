@@ -1,0 +1,12 @@
+[build]
+target = "riscv32i-unknown-none-elf"
+
+[target.riscv32i-unknown-none-elf]
+rustflags = ["-C", "link-arg=-Tlink.ld"]
+
+# Project commands (the tool in xtask/ runs on your PC, not on the RISC-V chip):
+#   cargo bin   ->  target/rvtest.bin   raw machine code
+#   cargo asm   ->  target/rvtest.s     clean assembly of the linked program
+[alias]
+bin = "run -q --manifest-path xtask/Cargo.toml --target host-tuple --target-dir target/xtask -- bin"
+asm = "run -q --manifest-path xtask/Cargo.toml --target host-tuple --target-dir target/xtask -- asm"

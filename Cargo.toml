@@ -1,0 +1,12 @@
+[package]
+name = "rvtest"
+version = "0.1.0"
+edition = "2024"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = 1
+debug = false
