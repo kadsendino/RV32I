@@ -1,0 +1,186 @@
+[settings]
+name = "RISC-V"
+variant = "RV32I"
+endianness = little
+line_comments = ["#","//",";","."]
+block_comments = {"/*":"*/"}
+
+[fields]
+
+register
+x0 00000
+x1 00001
+x2 00010
+x3 00011
+x4 00100
+x5 00101
+x6 00110
+x7 00111
+x8 01000
+x9 01001
+x10 01010
+x11 01011
+x12 01100
+x13 01101
+x14 01110
+x15 01111
+x16 10000
+x17 10001
+x18 10010
+x19 10011
+x20 10100
+x21 10101
+x22 10110
+x23 10111
+x24 11000
+x25 11001
+x26 11010
+x27 11011
+x28 11100
+x29 11101
+x30 11110
+x31 11111
+//--------
+zero 00000
+ra   00001
+sp   00010
+gp   00011
+tp   00100
+t0   00101
+t1   00110
+t2   00111
+fp   01000
+s0   01000
+s1   01001
+a0   01010
+a1   01011
+a2   01100
+a3   01101
+a4   01110
+a5   01111
+a6   10000
+a7   10001
+s2   10010
+s3   10011
+s4   10100
+s5   10101
+s6   10110
+s7   10111
+s8   11000
+s9   11001
+s10  11010
+s11  11011
+t3   11100
+t4   11101
+t5   11110
+t6   11111
+
+[instructions]
+
+// Upper Immediate Instructions
+
+lui %a(register), %b:U20(immediate)
+bbbbbbbb bbbbbbbb bbbbaaaa a0110111
+# Build 32-bit constants and uses the U-type format. LUI places the U-immediate value in the top 20 bits of the destination register %a, filling in the lowest 12 bits with zeros.
+
+auipc %a(register), %b:U20(immediate)
+bbbbbbbb bbbbbbbb bbbbaaaa a0010111
+# Build pc-relative addresses and uses the U-type format. AUIPC forms a 32-bit offset from the 20-bit U-immediate, filling in the lowest 12 bits with zeros, adds this offset to the pc, then places the result in register %a.
+
+// Immediate Instructions
+
+addi %a(register), %b(register), %c:S12(immediate)
+cccccccc ccccbbbb b000aaaa a0010011
+# Adds the sign-extended 12-bit immediate to register %b. Arithmetic overflow is ignored and the result is simply the low XLEN bits of the result. ADDI %a, %b, 0 is used to implement the MV %a, %b assembler pseudo-instruction.
+
+slti %a(register), %b(register), %c:S12(immediate)
+cccccccc ccccbbbb b010aaaa a0010011
+# Place the value 1 in register %a if register %b is less than the signextended immediate when both are treated as signed numbers, else 0 is written to %a.
+
+sltiu %a(register), %b(register), %c:U12(immediate)
+cccccccc ccccbbbb b011aaaa a0010011
+# Place the value 1 in register %a if register %b is less than the immediate when both are treated as unsigned numbers, else 0 is written to %a.
+
+xori %a(register), %b(register), %c:S12(immediate)
+cccccccc ccccbbbb b100aaaa a0010011
+# Performs bitwise XOR on register %b and the sign-extended 12-bit immediate and place the result in %a. Note, “XORI rd, rs1, -1” performs a bitwise logical inversion of register rs1(assembler pseudo-instruction NOT rd, rs)
+
+ori %a(register), %b(register), %c:S12(immediate)
+cccccccc ccccbbbb b110aaaa a0010011
+# Performs bitwise OR on register %b and the sign-extended 12-bit immediate and place the result in %a.
+
+andi %a(register), %b(register), %c:S12(immediate)
+cccccccc ccccbbbb b111aaaa a0010011
+# Performs bitwise OR on register %b and the sign-extended 12-bit immediate and place the result in %a.
+
+slli %a(register), %b(register), %c:U5(immediate)
+0000000c ccccbbbb b001aaaa a0010011
+# Performs logical left shift on the value in register %b by the shift amount held in the lower 5 bits of the immediate
+
+srli %a(register), %b(register), %c:U5(immediate)
+0000000c ccccbbbb b101aaaa a0010011
+# Performs logical right shift on the value in register %b by the shift amount held in the lower 5 bits of the immediate
+
+srai %a(register), %b(register), %c:U5(immediate)
+0100000c ccccbbbb b101aaaa a0010011
+# Performs arithmetic right shift on the value in register %b by the shift amount held in the lower 5 bits of the immediate
+
+// Register Instructions
+
+add %a(register), %b(register), %c(register)
+0000000c ccccbbbb b000aaaa a0110011
+# Adds the registers %b and %c and stores the result in %a. Arithmetic overflow is ignored and the result is simply the low XLEN bits of the result.
+
+sub %a(register), %b(register), %c(register)
+0100000c ccccbbbb b000aaaa a0110011
+# Subs the register %c from %b and stores the result in %a. Arithmetic overflow is ignored and the result is simply the low XLEN bits of the result.
+
+sll %a(register), %b(register), %c(register)
+0000000c ccccbbbb b001aaaa a0110011
+# Performs logical left shift on the value in register %b by the shift amount held in the lower 5 bits of register %c.
+
+sltu %a(register), %b(register), %c(register)
+0000000c ccccbbbb b011aaaa a0110011
+# Place the value 1 in register %a if register %b is less than register %c when both are treated as unsigned numbers, else 0 is written to %a.
+
+xor %a(register), %b(register), %c(register)
+0000000c ccccbbbb b100aaaa a0110011
+# Performs bitwise XOR on registers %b and %c and place the result in %a.
+
+srl %a(register), %b(register), %c(register)
+0000000c ccccbbbb b101aaaa a0110011
+# Logical right shift on the value in register %b by the shift amount held in the lower 5 bits of register %c.
+
+sra %a(register), %b(register), %c(register)
+0100000c ccccbbbb b101aaaa a0110011
+# Performs arithmetic right shift on the value in register %b by the shift amount held in the lower 5 bits of register %c.
+
+or %a(register), %b(register), %c(register)
+0000000c ccccbbbb b110aaaa a0110011
+# Performs bitwise OR on registers %b and %c and place the result in %a.
+
+and %a(register), %b(register), %c(register)
+0000000c ccccbbbb b111aaaa a0110011
+# Performs bitwise AND on registers %b and %c and place the result in %a.
+
+// Store Instructions
+
+lw %a(register), %b:S12(immediate)(%c(register))
+bbbbbbbb bbbbcccc c010aaaa a0000011
+# Loads a 32-bit value from memory and sign-extends this to XLEN bits before storing it in register %a.
+
+sw %a(register), %b:S12(immediate)(%c(register))
+bbbbbbba aaaacccc c010bbbb b0100011
+# Store 32-bit, values from the low bits of register %a to memory.
+
+// Jump Instructions
+
+jalr %a(register), %b:S12(immediate)(%c(register))
+bbbbbbbb bbbbcccc c000aaaa a1100111
+# Jump to address and place return address in %a.
+
+// Branch Instructions
+
+ebreak
+00000000000100000000000001110011
+
