@@ -1,1 +1,0 @@
-{"rustc":5244445300240561903,"features":"","declared_features":"","target":0,"profile":0,"path":0,"deps":[[7156430605771830664,"build_script_build",false,6748025435415591965]],"local":[{"RerunIfChanged":{"output":"riscv32i-unknown-none-elf/debug/build/rvtest-eec71f41dde3a347/output","paths":["link.ld"]}}],"rustflags":["-C","link-arg=-Tlink.ld"],"config":0,"compile_kind":0}

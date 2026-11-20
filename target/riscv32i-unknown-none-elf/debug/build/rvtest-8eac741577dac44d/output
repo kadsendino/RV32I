@@ -1,2 +1,0 @@
-cargo:rustc-link-search=/home/maximilian/Repositories/RV32I
-cargo:rerun-if-changed=link.ld
