@@ -51,7 +51,11 @@ pub fn decode(w: u32, pc: u32) -> String {
         21,
     );
     let imm_u = w >> 12;
-    let target = |off: i32| format!("0x{:x}", pc.wrapping_add(off as u32));
+
+    // Branch and jal offsets are printed relative to this instruction (like in
+    // the source), so the output can be assembled again. Target = pc + offset.
+    let target = |off: i32| hex(off);
+    let _ = pc;
 
     let unknown = || "<unknown>".to_string();
 

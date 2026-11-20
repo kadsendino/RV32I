@@ -121,7 +121,7 @@ fn to_asm(elf: &elf::Elf) -> String {
         for (i, word) in elf.bytes(s).chunks_exact(4).enumerate() {
             let pc = s.addr + 4 * i as u32;
             for l in labels.iter().filter(|l| l.value == pc) {
-                out += &format!("{:#}:\n", rustc_demangle::demangle(&l.name));
+                out += &format!("{}:\n", label(&l.name));
             }
             let w = u32::from_le_bytes([word[0], word[1], word[2], word[3]]);
             out += &disasm::decode(w, pc);
@@ -129,4 +129,14 @@ fn to_asm(elf: &elf::Elf) -> String {
         }
     }
     out
+}
+
+/// Readable label name: demangled Rust name with "::" replaced by "__".
+/// Other characters an assembler does not accept in a label (<, >, space, ...)
+/// become "_", so the output can be assembled again.
+fn label(symbol: &str) -> String {
+    let name = format!("{:#}", rustc_demangle::demangle(symbol)).replace("::", "__");
+    name.chars()
+        .map(|c| if c.is_ascii_alphanumeric() || c == '_' || c == '.' || c == '$' { c } else { '_' })
+        .collect()
 }

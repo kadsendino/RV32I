@@ -1,0 +1,6 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+    Checking rvtest v0.1.0 (/home/maximilian/Repositories/RV32I)
+error: could not compile `rvtest` (bin "rvtest" test) due to 1 previous error

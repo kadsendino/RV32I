@@ -1,1 +1,4 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+    Checking xtask v0.1.0 (/home/maximilian/Repositories/RV32I/xtask)
+error: could not compile `xtask` (bin "xtask" test) due to 90 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xtask` (bin "xtask") due to 89 previous errors
